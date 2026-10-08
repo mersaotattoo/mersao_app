@@ -2,3 +2,4 @@
   from = "/*"
   to = "/.netlify/functions/___netlify_handler"
   status = 200
+  force = true
