@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import { SUPABASE_ANON_KEY, SUPABASE_URL } from './env'
+import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@/env'
 
 export function createClient() {
   const cookieStore = cookies()
@@ -9,7 +9,7 @@ export function createClient() {
       getAll() {
         return cookieStore.getAll()
       },
-      setAll(list) {
+      setAll(list: any[]) {
         try {
           list.forEach(({ name, value, options }) => cookieStore.set(name, value, options))
         } catch {
