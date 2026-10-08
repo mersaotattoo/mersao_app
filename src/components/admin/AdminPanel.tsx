@@ -121,7 +121,15 @@ function PerfilSection({ ctx, perfil }: { ctx: Ctx; perfil: Perfil }) {
     nome: perfil.nome, cidade: perfil.cidade, endereco: perfil.endereco,
     bio: perfil.bio, whatsapp: perfil.whatsapp, instagram: perfil.instagram ?? '',
   })
-  const set = (k: keyof typeof d) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setD({ ...d, [k]: e.target.value })
+
+  useEffect(() => {
+    setD({
+      nome: perfil.nome, cidade: perfil.cidade, endereco: perfil.endereco,
+      bio: perfil.bio, whatsapp: perfil.whatsapp, instagram: perfil.instagram ?? '',
+    })
+  }, [perfil])
+
+  const set = (k: keyof typeof d) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => setD((prev) => ({ ...prev, [k]: e.target.value }))
 
   const trocarFoto = (f: File[]) =>
     ctx.run('Enviando foto…', async () => {
@@ -370,6 +378,13 @@ function PromoRow({ ctx, p }: { ctx: Ctx; p: Promocao }) {
   const [nome, setNome] = useState(p.nome)
   const [antigo, setAntigo] = useState(p.preco_antigo?.toString() ?? '')
   const [novo, setNovo] = useState(p.preco_novo.toString())
+
+  useEffect(() => {
+    setNome(p.nome)
+    setAntigo(p.preco_antigo?.toString() ?? '')
+    setNovo(p.preco_novo.toString())
+  }, [p])
+
   const salvar = () =>
     ctx.run('Salvando…', async () => {
       const pn = Number(novo.replace(',', '.'))
@@ -521,6 +536,7 @@ export default function AdminPanel() {
       try {
         await fn()
         await revalidateSite()
+        router.refresh()
         await reload()
       } catch (e) {
         haptics.tattoo()
@@ -529,7 +545,7 @@ export default function AdminPanel() {
         setBusy(null)
       }
     },
-    [reload, flash],
+    [reload, flash, router],
   )
 
   const ctx: Ctx = { sb, busy, setBusy, flash, run }
