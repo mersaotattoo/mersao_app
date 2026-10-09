@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect } from 'react';
-import { supabase } from '@/lib/supabaseClient';
 
 export default function Page() {
   useEffect(() => {
+    // Lógica JavaScript convertida para correr após a renderização do componente
     const $ = (s: string) => document.querySelector(s) as HTMLElement;     const $$ = (s: string) => [...document.querySelectorAll(s)] as HTMLElement[];
     const vib = (p: number | number[]) => { try { navigator.vibrate && navigator.vibrate(p) } catch (e) { } };
     const HB = [16, 70, 26];
@@ -30,6 +30,7 @@ export default function Page() {
     }
 
     const O = gp(44, 492, 452), I = gp(26, 292, 262);
+<<<<<<< HEAD
     function gear(u: string) {
       return `<svg viewBox="-500 -500 1000 1000"><defs><linearGradient id="g${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C6"/><stop offset=".5" stop-color="#B8975A"/><stop offset="1" stop-color="#6B5530"/></linearGradient></defs><circle r="402" fill="none" stroke="#D6BC8A" stroke-opacity=".38" stroke-width="20" stroke-dasharray="1.6 11.3"/></svg>
 <svg class="o" viewBox="-500 -500 1000 1000"><path d="${O}" fill="#111113" stroke="url(#g${u})" stroke-width="2.4"/><circle r="372" fill="none" stroke="url(#g${u})" stroke-opacity=".5"/>${holes(8, 316, 38, u)}</svg>
@@ -80,6 +81,59 @@ export default function Page() {
 
     const replayBtn = $('#replay');
     if (replayBtn) {
+=======
+
+    function gear(u: string) {
+      return `<svg viewBox="-500 -500 1000 1000"><defs><linearGradient id="g${u}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F3E7C6"/><stop offset=".5" stop-color="#B8975A"/><stop offset="1" stop-color="#6B5530"/></linearGradient></defs><circle r="402" fill="none" stroke="#D6BC8A" stroke-opacity=".38" stroke-width="20" stroke-dasharray="1.6 11.3"/></svg>
+<svg class="o" viewBox="-500 -500 1000 1000"><path d="${O}" fill="#111113" stroke="url(#g${u})" stroke-width="2.4"/><circle r="372" fill="none" stroke="url(#g${u})" stroke-opacity=".5"/>${holes(8, 316, 38, u)}</svg>
+<svg class="i" viewBox="-500 -500 1000 1000"><path d="${I}" fill="#111113" stroke="url(#g${u})" stroke-width="2.2"/><circle r="212" fill="none" stroke="url(#g${u})" stroke-opacity=".5"/>${holes(6, 150, 24, u)}</svg>`;
+    }
+
+    const gl = $('#gl');
+    const gr = $('#gr');
+    if (gl) gl.innerHTML = gear('L');
+    if (gr) gr.innerHTML = gear('R');
+
+    /* abertura */
+    let T: NodeJS.Timeout[] = [];
+    const sp = $('#sp');
+    const main = $('#main');
+
+    function playSplash() {
+      T.forEach(clearTimeout);
+      T = [];
+      sp?.remove();
+      const n = sp?.cloneNode(true) as HTMLElement;
+      if(n) {
+        document.body.prepend(n);
+        run(n);
+      }
+    }
+
+    function run(el: HTMLElement) {
+      if(!el) return;
+      document.body.style.overflow = 'hidden';
+      main?.classList.remove('on');
+      [450, 1150, 1750, 2250, 2600].forEach(t => T.push(setTimeout(() => vib(HB), t)));
+      const open = (done: number) => {
+        if (el.classList.contains('open')) return;
+        el.classList.add('open');
+        main?.classList.add('on');
+        vib([8, 24, 8, 24, 8, 24, 8]);
+        T.push(setTimeout(() => { el.remove(); document.body.style.overflow = '' }, done));
+      };
+      T.push(setTimeout(() => open(1900), 3150));
+      const skipBtn = el.querySelector('#skip') as HTMLElement;
+      if(skipBtn) {
+        skipBtn.onclick = () => { T.forEach(clearTimeout); open(1100) };
+      }
+    }
+
+    if(sp) run(sp);
+
+    const replayBtn = $('#replay');
+    if(replayBtn) {
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
       replayBtn.onclick = () => {
         vib(HB);
         window.scrollTo(0, 0);
@@ -90,12 +144,17 @@ export default function Page() {
     function playSplashFresh() {
       const d = document.createElement('div');
       d.id = 'sp';
+<<<<<<< HEAD
       const nomeAtual = $('#perfil-nome')?.textContent || 'MERSÃO TATTOO';
       d.innerHTML = `<div class="dr dl"><div class="gw">${gear('L')}</div></div><div class="dr dR"><div class="gw">${gear('R')}</div></div><div class="seam"></div><div class="em"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="none" stroke="#D6BC8A" stroke-width="1.2" stroke-linecap="round"/></svg><span class="gt">M</span></div><div class="sg2"><b>${nomeAtual.toUpperCase()}</b><p>Arte exclusiva na pele</p></div><button id="skip">PULAR</button>`;
+=======
+      d.innerHTML = `<div class="dr dl"><div class="gw">${gear('L')}</div></div><div class="dr dR"><div class="gw">${gear('R')}</div></div><div class="seam"></div><div class="em"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="none" stroke="#D6BC8A" stroke-width="1.2" stroke-linecap="round"/></svg><span class="gt">M</span></div><div class="sg2"><b>MERSÃO TATTOO</b><p>Arte exclusiva na pele</p></div><button id="skip">PULAR</button>`;
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
       document.body.prepend(d);
       run(d);
     }
 
+<<<<<<< HEAD
     /* perfil dinâmico via Supabase */
     async function carregarPerfil() {
       try {
@@ -173,6 +232,20 @@ export default function Page() {
     if (vid) {
       vid.innerHTML = ['Linha fina, passo a passo', 'Sombreamento em realismo', 'Lettering ao vivo', 'Fechamento de braço'].map((t, i) => `<div class="tile v" style="--h:${[30, 200, 320, 150][i]}"><i></i><span>${t}</span></div>`).join('');
       $$('#vid .tile').forEach(t => t.onclick = () => {         vib(12);         toast('No site real, o vídeo abre em tela cheia.');       });     }      $$
+=======
+    /* galeria + vídeos */
+    const G = [['Realismo em preto e cinza', 'Realismo', 30], ['Fine line botânico', 'Fine line', 150], ['Blackwork geométrico', 'Blackwork', 260], ['Traço delicado', 'Fine line', 320], ['Fechamento de braço', 'Blackwork', 200], ['Retrato realista', 'Realismo', 20]];
+    const gal = $('#gal');
+    if(gal) {
+        gal.innerHTML = G.map(g => `<div class="tile" style="--h:${g[2]}" data-s="${g[1]}"><span>${g[0]}</span></div>`).join('');
+    }
+    const vid = $('#vid');
+    if(vid) {
+        vid.innerHTML = ['Linha fina, passo a passo', 'Sombreamento em realismo', 'Lettering ao vivo', 'Fechamento de braço'].map((t, i) => `<div class="tile v" style="--h:${[30, 200, 320, 150][i]}"><i></i><span>${t}</span></div>`).join('');
+    }
+
+    $$('.tile').forEach(t => t.onclick = () => {       vib(12);       toast(t.classList.contains('v') ? 'No site real, o vídeo abre em tela cheia.' : 'No site real, a foto abre ampliada com swipe.');     });      $$
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
 ('#chips .chip').forEach(c => c.onclick = () => {
       vib(12);
       $$('#chips .chip').forEach(x => x.classList.toggle('on', x === c));       $$
@@ -180,6 +253,7 @@ export default function Page() {
     });
 
     /* dock + abas */
+<<<<<<< HEAD
     const IC: Record<string, string> = {
       portfolio: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>',
       videos: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/>',
@@ -195,6 +269,17 @@ export default function Page() {
 
     function go(k: string | undefined) {
       if (!k) return;
+=======
+    const IC: Record<string, string> = { portfolio: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/>', videos: '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M10 9l5 3-5 3z"/>', studio: '<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20"/>', promos: '<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z"/>', orcamento: '<path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 013 3L7 19l-4 1 1-4z"/>' };
+    const L: Record<string, string> = { portfolio: 'Portfólio', videos: 'Vídeos', studio: 'Studio', promos: 'Promos', orcamento: 'Orçamento' };
+    const dock = $('#dock');
+    if(dock) {
+        dock.innerHTML = Object.keys(L).map(k => `<button data-k="${k}"><svg viewBox="0 0 24 24">${IC[k]}</svg><span>${L[k]}</span></button>`).join('');
+    }
+
+    function go(k: string | undefined) {
+      if(!k) return;
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
       vib(HB);
       $$('.tab').forEach(t => t.classList.toggle('on', t.id === k));$$
 ('#dock button').forEach(b => b.classList.toggle('on', b.dataset.k === k));
@@ -208,16 +293,28 @@ export default function Page() {
     $$('.hb').forEach(b => b.addEventListener('click', () => {       vib(HB);       b.classList.add('beat');       setTimeout(() => b.classList.remove('beat'), 140);     }));      $$
 ('[data-flash]').forEach(b => b.addEventListener('click', () => {
       const ide = $('#ide') as HTMLInputElement;
+<<<<<<< HEAD
       if (ide) ide.value = 'Quero reservar o flash: ' + b.dataset.flash + '.';
+=======
+      if(ide) ide.value = 'Quero reservar o flash: ' + b.dataset.flash + '.';
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
       go('orcamento');
     }));
 
     const sndBtn = $('#snd');
+<<<<<<< HEAD
     if (sndBtn) {
       sndBtn.onclick = e => {
         const target = e.currentTarget as HTMLElement;
         target.textContent = target.textContent === 'SOM' ? 'MUDO' : 'SOM';
       };
+=======
+    if(sndBtn) {
+        sndBtn.onclick = e => {
+          const target = e.currentTarget as HTMLElement;
+          target.textContent = target.textContent === 'SOM' ? 'MUDO' : 'SOM';
+        };
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
     }
 
     /* formulário */
@@ -226,6 +323,7 @@ export default function Page() {
     });
 
     const sendBtn = $('#send');
+<<<<<<< HEAD
     if (sendBtn) {
       sendBtn.onclick = async () => {
         const nm = $('#nm') as HTMLInputElement;
@@ -250,12 +348,38 @@ export default function Page() {
         if (ff) ff.hidden = true;
         if (okb) okb.hidden = false;
       };
+=======
+    if(sendBtn) {
+        sendBtn.onclick = () => {
+          const nm = $('#nm') as HTMLInputElement;
+          const ide = $('#ide') as HTMLInputElement;
+          const mj = $('#mj') as HTMLInputElement;
+          
+          if (!nm?.value.trim() || !ide?.value.trim()) {
+            vib([8, 24, 8, 24, 8]);
+            return toast('Preencha o nome e a ideia.');
+          }
+          if (!mj?.checked) {
+            vib([8, 24, 8, 24, 8]);
+            return toast('Confirme que tem 18 anos ou mais.');
+          }
+          vib([20, 60, 20, 60, 44]);
+          const ff = $('#ff');
+          const okb = $('#okb');
+          if(ff) ff.hidden = true;
+          if(okb) okb.hidden = false;
+        };
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
     }
 
     let tt: NodeJS.Timeout;
     function toast(m: string) {
       const t = $('#toast');
+<<<<<<< HEAD
       if (!t) return;
+=======
+      if(!t) return;
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
       t.textContent = m;
       t.classList.add('on');
       clearTimeout(tt);
@@ -306,7 +430,11 @@ export default function Page() {
         .tile:active{transform:scale(.97)}
         .tile::before{content:"";position:absolute;inset:18%;border-radius:50%;border:1px solid rgba(214,188,138,.22);box-shadow:0 0 0 14px rgba(214,188,138,.05)}
         .tile span{position:absolute;left:14px;right:14px;bottom:14px;font:italic 15px 'Playfair Display'}
+<<<<<<< HEAD
         .tile.v{aspect-ratio:9/16}.tile.v::after{content:"";position:absolute;left:50%;top:50%;margin:-26px;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.08);backdrop-filter:blur(10px);clip-path:none}
+=======
+        .tile.v{aspect-ratio:9/16}.tile.v::after{content:"";position:absolute;left:50%;top:50%;margin:-26px;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.08) ;backdrop-filter:blur(10px);clip-path:none}
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
         .tile.v i{position:absolute;left:50%;top:50%;margin:-8px -5px;border:8px solid transparent;border-left:13px solid var(--gl);border-right:0;z-index:2}
         .rev{display:grid;gap:16px;margin-top:20px}.rev figure{padding:26px;border-radius:24px}.rev q{font:italic 17px/1.6 'Playfair Display';color:rgba(237,231,218,.85)}.rev figcaption{margin-top:14px;color:var(--m);font-size:13px}.st{color:var(--g);letter-spacing:3px;font-size:12px;margin-bottom:12px}
         .cols{display:grid;gap:20px}.map{position:relative;min-height:300px;border-radius:24px;overflow:hidden;background:linear-gradient(#ffffff0a 1px,transparent 1px) 0 0/44px 44px,linear-gradient(90deg,#ffffff0a 1px,transparent 1px) 0 0/44px 44px,radial-gradient(70% 70% at 50% 50%,#1b1b1e,#0c0c0e)}
@@ -379,11 +507,19 @@ export default function Page() {
         <button className="who glass" id="replay" aria-label="Rever abertura">
           <span className="av gt">M</span>
           <span style={{ textAlign: 'left', minWidth: 0 }}>
+<<<<<<< HEAD
             <b id="perfil-nome">Mersão Tattoo</b>
             <small id="perfil-cidade">Ponte Nova, MG</small>
           </span>
         </button>
         <button className="wa glass hb" id="wa-btn">
+=======
+            <b>Mersão Tattoo</b>
+            <small>Ponte Nova, MG</small>
+          </span>
+        </button>
+        <button className="wa glass hb">
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
           <span style={{ color: 'var(--g)' }}>●</span>
           <span className="lb">WhatsApp</span>
         </button>
@@ -557,7 +693,10 @@ export default function Page() {
             </div>
           </div>
         </section>
+<<<<<<< HEAD
 
+=======
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
         <p className="note">Pré-visualização: fotos, vídeos e mapa são ilustrativos. Toque no “M” do topo para rever a abertura.</p>
       </main>
 
@@ -565,4 +704,8 @@ export default function Page() {
       <div className="toast glass" id="toast"></div>
     </>
   );
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 56fb02fe9ad17bc3bb271767f2a201fda33f66a5
