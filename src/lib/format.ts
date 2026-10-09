@@ -9,5 +9,11 @@ export function waLink(phone: string, text?: string) {
   return `https://wa.me/${full}${text ? `?text=${encodeURIComponent(text)}` : ''}`
 }
 
+export function instagramUrl(handle?: string | null): string {
+  if (!handle) return '#'
+  const clean = handle.replace(/^@/, '').trim()
+  return `https://instagram.com/${clean}`
+}
+
 export const desconto = (antigo: number | null, novo: number) =>
   antigo && antigo > novo ? Math.round(((antigo - novo) / antigo) * 100) : 0
