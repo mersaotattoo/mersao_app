@@ -51,14 +51,14 @@ export default function Page() {
       T = [];
       sp?.remove();
       const n = sp?.cloneNode(true) as HTMLElement;
-      if(n) {
+      if (n) {
         document.body.prepend(n);
         run(n);
       }
     }
 
     function run(el: HTMLElement) {
-      if(!el) return;
+      if (!el) return;
       document.body.style.overflow = 'hidden';
       main?.classList.remove('on');
       [450, 1150, 1750, 2250, 2600].forEach(t => T.push(setTimeout(() => vib(HB), t)));
@@ -71,15 +71,15 @@ export default function Page() {
       };
       T.push(setTimeout(() => open(1900), 3150));
       const skipBtn = el.querySelector('#skip') as HTMLElement;
-      if(skipBtn) {
+      if (skipBtn) {
         skipBtn.onclick = () => { T.forEach(clearTimeout); open(1100) };
       }
     }
 
-    if(sp) run(sp);
+    if (sp) run(sp);
 
     const replayBtn = $('#replay');
-    if(replayBtn) {
+    if (replayBtn) {
       replayBtn.onclick = () => {
         vib(HB);
         window.scrollTo(0, 0);
@@ -90,10 +90,42 @@ export default function Page() {
     function playSplashFresh() {
       const d = document.createElement('div');
       d.id = 'sp';
-      d.innerHTML = `<div class="dr dl"><div class="gw">${gear('L')}</div></div><div class="dr dR"><div class="gw">${gear('R')}</div></div><div class="seam"></div><div class="em"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="none" stroke="#D6BC8A" stroke-width="1.2" stroke-linecap="round"/></svg><span class="gt">M</span></div><div class="sg2"><b>MERSÃO TATTOO</b><p>Arte exclusiva na pele</p></div><button id="skip">PULAR</button>`;
+      const nomeAtual = $('#perfil-nome')?.textContent || 'MERSÃO TATTOO';
+      d.innerHTML = `<div class="dr dl"><div class="gw">${gear('L')}</div></div><div class="dr dR"><div class="gw">${gear('R')}</div></div><div class="seam"></div><div class="em"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="47" fill="none" stroke="#D6BC8A" stroke-width="1.2" stroke-linecap="round"/></svg><span class="gt">M</span></div><div class="sg2"><b>${nomeAtual.toUpperCase()}</b><p>Arte exclusiva na pele</p></div><button id="skip">PULAR</button>`;
       document.body.prepend(d);
       run(d);
     }
+
+    /* perfil dinâmico via Supabase */
+    async function carregarPerfil() {
+      try {
+        const { data, error } = await supabase
+          .from('configuracoes_perfil')
+          .select('*')
+          .limit(1)
+          .single();
+
+        if (data && !error) {
+          const nomeEl = $('#perfil-nome');
+          const cidadeEl = $('#perfil-cidade');
+          const splashNomeEl = document.querySelector('.sg2 b');
+          const waBtn = $('#wa-btn');
+
+          if (nomeEl && data.nome) nomeEl.textContent = data.nome;
+          if (cidadeEl && data.cidade) cidadeEl.textContent = data.cidade;
+          if (splashNomeEl && data.nome) splashNomeEl.textContent = data.nome.toUpperCase();
+
+          if (waBtn && (data.whatsapp || data.telefone)) {
+            const num = (data.whatsapp || data.telefone).replace(/\D/g, '');
+            waBtn.onclick = () => window.open(`https://wa.me/${num}`, '_blank');
+          }
+        }
+      } catch (err) {
+        console.error('Erro ao carregar configurações do perfil:', err);
+      }
+    }
+
+    carregarPerfil();
 
     /* galeria e vídeos */
     const G_PADRAO = [
@@ -138,7 +170,7 @@ export default function Page() {
     carregarGaleria();
 
     const vid = $('#vid');
-    if(vid) {
+    if (vid) {
       vid.innerHTML = ['Linha fina, passo a passo', 'Sombreamento em realismo', 'Lettering ao vivo', 'Fechamento de braço'].map((t, i) => `<div class="tile v" style="--h:${[30, 200, 320, 150][i]}"><i></i><span>${t}</span></div>`).join('');
       $$('#vid .tile').forEach(t => t.onclick = () => {         vib(12);         toast('No site real, o vídeo abre em tela cheia.');       });     }      $$
 ('#chips .chip').forEach(c => c.onclick = () => {
@@ -157,12 +189,12 @@ export default function Page() {
     };
     const L: Record<string, string> = { portfolio: 'Portfólio', videos: 'Vídeos', studio: 'Studio', promos: 'Promos', orcamento: 'Orçamento' };
     const dock = $('#dock');
-    if(dock) {
+    if (dock) {
       dock.innerHTML = Object.keys(L).map(k => `<button data-k="${k}"><svg viewBox="0 0 24 24">${IC[k]}</svg><span>${L[k]}</span></button>`).join('');
     }
 
     function go(k: string | undefined) {
-      if(!k) return;
+      if (!k) return;
       vib(HB);
       $$('.tab').forEach(t => t.classList.toggle('on', t.id === k));$$
 ('#dock button').forEach(b => b.classList.toggle('on', b.dataset.k === k));
@@ -176,12 +208,12 @@ export default function Page() {
     $$('.hb').forEach(b => b.addEventListener('click', () => {       vib(HB);       b.classList.add('beat');       setTimeout(() => b.classList.remove('beat'), 140);     }));      $$
 ('[data-flash]').forEach(b => b.addEventListener('click', () => {
       const ide = $('#ide') as HTMLInputElement;
-      if(ide) ide.value = 'Quero reservar o flash: ' + b.dataset.flash + '.';
+      if (ide) ide.value = 'Quero reservar o flash: ' + b.dataset.flash + '.';
       go('orcamento');
     }));
 
     const sndBtn = $('#snd');
-    if(sndBtn) {
+    if (sndBtn) {
       sndBtn.onclick = e => {
         const target = e.currentTarget as HTMLElement;
         target.textContent = target.textContent === 'SOM' ? 'MUDO' : 'SOM';
@@ -194,7 +226,7 @@ export default function Page() {
     });
 
     const sendBtn = $('#send');
-    if(sendBtn) {
+    if (sendBtn) {
       sendBtn.onclick = async () => {
         const nm = $('#nm') as HTMLInputElement;
         const ide = $('#ide') as HTMLInputElement;
@@ -215,15 +247,15 @@ export default function Page() {
         vib([20, 60, 20, 60, 44]);
         const ff = $('#ff');
         const okb = $('#okb');
-        if(ff) ff.hidden = true;
-        if(okb) okb.hidden = false;
+        if (ff) ff.hidden = true;
+        if (okb) okb.hidden = false;
       };
     }
 
     let tt: NodeJS.Timeout;
     function toast(m: string) {
       const t = $('#toast');
-      if(!t) return;
+      if (!t) return;
       t.textContent = m;
       t.classList.add('on');
       clearTimeout(tt);
@@ -347,11 +379,11 @@ export default function Page() {
         <button className="who glass" id="replay" aria-label="Rever abertura">
           <span className="av gt">M</span>
           <span style={{ textAlign: 'left', minWidth: 0 }}>
-            <b>Mersão Tattoo</b>
-            <small>Ponte Nova, MG</small>
+            <b id="perfil-nome">Mersão Tattoo</b>
+            <small id="perfil-cidade">Ponte Nova, MG</small>
           </span>
         </button>
-        <button className="wa glass hb">
+        <button className="wa glass hb" id="wa-btn">
           <span style={{ color: 'var(--g)' }}>●</span>
           <span className="lb">WhatsApp</span>
         </button>
