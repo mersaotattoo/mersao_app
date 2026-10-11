@@ -6,7 +6,7 @@ export const DEFAULT_SECOES: SecoesVisiveis = {
   studio: true,
   promos: true,
   orcamento: true,
-  reel: true,
+  
   depoimentos: true,
 }
 
