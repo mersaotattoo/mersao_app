@@ -10,7 +10,7 @@ import VideosTab from './tabs/VideosTab'
 import StudioTab from './tabs/StudioTab'
 import PromosTab from './tabs/PromosTab'
 import OrcamentoTab from './tabs/OrcamentoTab'
-import type { SecaoKey, SiteData } from '@/lib/types'
+import type { Secakey, SiteData } from '@/lib/types'
 
 const SPLASH_KEY = 'mersao:splash-at'
 const SPLASH_TTL = 24 * 60 * 60 * 1000 // a abertura toca de novo após 24h (ou com ?splash na URL)
@@ -19,12 +19,12 @@ export default function SiteApp({ data }: { data: SiteData }) {
   const { perfil, portfolio, promocoes, videos } = data
   const [splash, setSplash] = useState<'pending' | 'play' | 'off'>('pending')
   const [revealed, setRevealed] = useState(false)
-  const [tab, setTab] = useState<SecaoKey>('portfolio')
+  const [tab, setTab] = useState<Secakey>('portfolio')
   const [prefill, setPrefill] = useState('')
   const [toast, setToast] = useState<string | null>(null)
 
-  const tabs = TABS.filter((t) => perfil.secoes_visiveis[t.key])
-  const active: SecaoKey = tabs.some((t) => t.key === tab) ? tab : tabs[0]?.key ?? 'portfolio'
+  const tabs = TABS.filter((t) => perfil.secoes_visiveis[t.key as Secakey])
+  const active: Secakey = tabs.some((t) => t.key === tab) ? tab : (tabs[0]?.key as Secakey) ?? 'portfolio'
 
   useEffect(() => {
     try {
@@ -43,7 +43,7 @@ export default function SiteApp({ data }: { data: SiteData }) {
     setRevealed(true)
   }, [])
 
-  const goTo = useCallback((k: SecaoKey) => {
+  const goTo = useCallback((k: Secakey) => {
     setTab(k)
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }, [])
