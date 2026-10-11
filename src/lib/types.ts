@@ -68,4 +68,5 @@ export interface SiteData {
   portfolio: PortfolioItem[]
   promocoes: Promocao[]
   videos: VideoItem[]
+  categorias?: string[]
 }
