@@ -4,13 +4,14 @@ import { useRouter } from 'next/navigation'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import {
-  ArrowDown, ArrowUp, Camera, Check, Clapperboard, ExternalLink, ImageIcon, Inbox, Loader2, LogOut,
+  ArrowDown, ArrowUp, BarChart3, Camera, Check, Clapperboard, ExternalLink, ImageIcon, Inbox, Loader2, LogOut,
   Megaphone, MessageCircle, SlidersHorizontal, Sparkles, Star, Tag, Trash2, Upload, User,
 } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { revalidateSite } from '@/app/actions'
 import { sair } from '@/app/login/actions'
 import { HapticButton } from '@/components/HapticButton'
+import MetricasSection from '@/components/admin/MetricasSection'
 import { haptics } from '@/lib/haptics'
 import { instagramHandle, waLink } from '@/lib/format'
 import { DEFAULT_PERFIL, DEFAULT_SECOES } from '@/lib/defaults'
@@ -18,9 +19,10 @@ import { MAX_VIDEO_MB, REF_BUCKET, pathFromUrl, removeFiles, uploadImage, upload
 import { cleanGoogleId, cleanMetaId, cleanTiktokId } from '@/lib/pixels'
 import type { Categoria, Orcamento, Perfil, PortfolioItem, Promocao, SecoesVisiveis, StudioItem, VideoItem } from '@/lib/types'
 
-type TabId = 'perfil' | 'portfolio' | 'categorias' | 'studio' | 'videos' | 'promos' | 'orcamentos' | 'marketing' | 'secoes'
+type TabId = 'metricas' | 'perfil' | 'portfolio' | 'categorias' | 'studio' | 'videos' | 'promos' | 'orcamentos' | 'marketing' | 'secoes'
 
 const NAV: { id: TabId; label: string; Icon: typeof User }[] = [
+  { id: 'metricas', label: 'Métricas', Icon: BarChart3 },
   { id: 'perfil', label: 'Perfil', Icon: User },
   { id: 'portfolio', label: 'Fotos', Icon: ImageIcon },
   { id: 'categorias', label: 'Categorias', Icon: Tag },
@@ -881,7 +883,7 @@ function PedidosSection({ ctx, items }: { ctx: Ctx; items: Orcamento[] }) {
 export default function AdminPanel() {
   const router = useRouter()
   const sb = useMemo(() => createClient(), [])
-  const [tab, setTab] = useState<TabId>('perfil')
+  const [tab, setTab] = useState<TabId>('metricas')
   const [perfil, setPerfil] = useState<Perfil | null>(null)
   const [portfolio, setPortfolio] = useState<PortfolioItem[]>([])
   const [videos, setVideos] = useState<VideoItem[]>([])
@@ -990,6 +992,7 @@ export default function AdminPanel() {
       ) : (
         <AnimatePresence mode="wait">
           <motion.div key={tab} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.28 }}>
+            {tab === 'metricas' && <MetricasSection sb={sb} />}
             {tab === 'perfil' && <PerfilSection ctx={ctx} perfil={perfil} />}
             {tab === 'portfolio' && <PortfolioSection ctx={ctx} items={portfolio} categorias={categorias} catIndisponivel={catIndisponivel} />}
             {tab === 'categorias' && <CategoriasSection ctx={ctx} categorias={categorias} fotos={portfolio} catIndisponivel={catIndisponivel} />}

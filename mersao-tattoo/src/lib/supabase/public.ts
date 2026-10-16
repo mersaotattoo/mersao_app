@@ -13,8 +13,8 @@ import { cleanGoogleId, cleanMetaId, cleanTiktokId } from '@/lib/pixels'
 import type { Categoria, Perfil, PortfolioItem, Promocao, SiteData, StudioItem, VideoItem } from '@/lib/types'
 
 /**
- * Busca os dados públicos do site no Supabase, a cada visita (sem cache),
- * para que tudo o que for salvo no painel apareça no site na hora.
+ * Busca os dados públicos do site no Supabase (cache curto de 60 s, limpo na hora
+ * pelo painel ao salvar), para que tudo o que for salvo apareça no site rapidamente.
  *
  * - Supabase NÃO configurado (sem .env): usa o conteúdo de exemplo, para o site não ficar em branco.
  * - Supabase configurado: mostra sempre os dados reais. Se uma consulta falhar,
@@ -39,8 +39,11 @@ export async function getSiteData(): Promise<SiteData> {
   try {
     const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
       auth: { persistSession: false, autoRefreshToken: false },
-      // Garante que o Next.js nunca guarde estas respostas em cache.
-      global: { fetch: (input: RequestInfo | URL, init?: RequestInit) => fetch(input, { ...init, cache: 'no-store' }) },
+      // Cache de no máximo 60 s. O painel limpa este cache (tag "site") sempre que você salva algo.
+      global: {
+        fetch: (input: RequestInfo | URL, init?: RequestInit) =>
+          fetch(input, { ...init, next: { revalidate: 60, tags: ['site'] } }),
+      },
     })
 
     const [perfil, categorias, portfolio, promocoes, videos, studio] = await Promise.all([

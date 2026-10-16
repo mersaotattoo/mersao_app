@@ -1,5 +1,5 @@
 'use server'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { createClient } from '@/lib/supabase/server'
 import { hasSupabaseEnv } from '@/lib/supabase/env'
 
@@ -11,6 +11,7 @@ export async function revalidateSite() {
     const supabase = createClient()
     const { data: isAdmin } = await supabase.rpc('is_admin')
     if (!isAdmin) return
+    revalidateTag('site')
     revalidatePath('/')
   } catch {
     /* não deve derrubar o salvamento do painel */
